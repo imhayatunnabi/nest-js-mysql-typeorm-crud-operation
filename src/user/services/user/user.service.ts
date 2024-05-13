@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/entities/User';
@@ -6,7 +6,7 @@ import { UserDto } from 'src/user/dtos/UserDto';
 
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
+    constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }
 
     async getUsers(page: number, limit: number): Promise<User[]> {
         const skip = (page - 1) * limit;
@@ -25,8 +25,16 @@ export class UserService {
     }
 
     async createUser(userDto: UserDto): Promise<User> {
-        const newUser = this.userRepository.create({...userDto, created_at: new Date()});
-        return this.userRepository.save(newUser);
+        try {
+            const existingUser = await this.userRepository.findOne({ where: { username: userDto.username } });
+            if (existingUser) {
+                throw new Error(`Username '${userDto.username}' is already taken`);
+            }
+            const newUser = this.userRepository.create({ ...userDto, created_at: new Date() });
+            return this.userRepository.save(newUser);
+        } catch (error) {
+            throw new InternalServerErrorException('Failed to create user. Please try again later.');
+        }
     }
 
     async updateUser(id: number, userDto: UserDto): Promise<User> {
