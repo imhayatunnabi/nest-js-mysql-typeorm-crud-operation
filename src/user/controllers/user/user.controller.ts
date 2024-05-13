@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/User';
@@ -8,27 +8,30 @@ import { UserDto } from 'src/user/dtos/UserDto';
 @Controller('user')
 export class UserController {
     constructor(private userService: UserService) { }
-    // constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
 
-    @Get('/index')
-    getUser() {
-
+    @Get()
+    async getUsers(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<User[]> {
+        return this.userService.getUsers(page, limit);
     }
-    @Post('store')
+
+    @Get(':id')
+    async getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+        return this.userService.findUserById(id);
+    }
+
+    @Post()
     @UsePipes(new ValidationPipe())
-    postUser(@Body() userDto: UserDto) {
-        return this.userService.postUser(userDto);
+    async createUser(@Body() userDto: UserDto): Promise<User> {
+        return this.userService.createUser(userDto);
     }
-    @Get('find/:id')
-    findUser(@Param('id', ParseIntPipe) id: number) {
 
+    @Put(':id')
+    async updateUser(@Param('id', ParseIntPipe) id: number, @Body() userDto: UserDto): Promise<User> {
+        return this.userService.updateUser(id, userDto);
     }
-    @Put('update/:id')
-    updateUser(@Param('id', ParseIntPipe) id: number) {
 
-    }
-    @Delete('delete/:id')
-    deleteUser(@Param('id', ParseIntPipe) id: number) {
-
+    @Delete(':id')
+    async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+        return this.userService.deleteUser(id);
     }
 }
