@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/User';
@@ -20,11 +20,15 @@ export class UserController {
         return this.userService.postUser(userDto);
     }
     @Get('find/:id')
-    findUser() {
+    findUser(@Param('id', ParseIntPipe) id: number) {
 
     }
     @Put('update/:id')
-    updateUser() {
+    updateUser(@Param('id', ParseIntPipe) id: number) {
+
+    }
+    @Delete('delete/:id')
+    deleteUser(@Param('id', ParseIntPipe) id: number) {
 
     }
 }
