@@ -1,8 +1,10 @@
-import { IsNotEmpty, Max, Min } from "class-validator";
+import { IsNotEmpty, MinLength } from "class-validator";
 
 export class UserDto {
-    @IsNotEmpty()
+    @IsNotEmpty({ message: 'Username should not be empty' })
     username: string;
-    @IsNotEmpty()
+
+    @IsNotEmpty({ message: 'Password should not be empty' })
+    @MinLength(8, { message: 'Password must be at least 8 characters long' })
     password: string;
 }
