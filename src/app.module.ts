@@ -6,6 +6,7 @@ import { User } from './entities/User';
 import { UserModule } from './user/user.module';
 import { IsUniqueConstraint } from './shared/validation/is-unique-constraint';
 import { ProductModule } from './product/product.module';
+import { Product } from './product/entities/product.entity';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { ProductModule } from './product/product.module';
       password: 'P@$$Wor8',
       database: 'nestjsmysqlcrud',
       synchronize: true,
-      entities:[User]
+      entities:[User, Product]
     }),
     UserModule,
     ProductModule,
