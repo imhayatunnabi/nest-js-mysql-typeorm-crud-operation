@@ -1,8 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from '../../services/user/user.service';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/User';
-import { Repository } from 'typeorm';
 import { UserDto } from 'src/user/dtos/UserDto';
 
 @Controller('user')
