@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,8 +17,13 @@ export class ProductService {
     });
   }
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  create(createProductDto: CreateProductDto): Promise<Product> {
+    try {
+      const newProduct = this.productRepository.create({...createProductDto});
+      return this.productRepository.save(newProduct);
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to create a new product')
+    }
   }
 
   findOne(id: number) {
