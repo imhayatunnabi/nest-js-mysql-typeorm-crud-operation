@@ -27,9 +27,6 @@ export class UserService {
     async createUser(userDto: UserDto): Promise<User> {
         try {
             const existingUser = await this.userRepository.findOne({ where: { username: userDto.username } });
-            if (existingUser) {
-                throw new Error(`Username '${userDto.username}' is already taken`);
-            }
             const newUser = this.userRepository.create({ ...userDto, created_at: new Date() });
             return this.userRepository.save(newUser);
         } catch (error) {
@@ -39,10 +36,6 @@ export class UserService {
 
     async updateUser(id: number, userDto: UserDto): Promise<User> {
         const existingUser = await this.findUserById(id);
-        // const existingUser = await this.userRepository.findOne({ where: { username: userDto.username } });
-        if (existingUser) {
-            throw new Error(`Username '${userDto.username}' is already taken`);
-        }
         const updatedUser = { ...existingUser, ...userDto };
         return this.userRepository.save(updatedUser);
     }
