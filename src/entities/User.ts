@@ -7,8 +7,8 @@ export class User {
     username: string;
     @Column()
     password: string;
-    // @Column({ nullable: true })
-    // image: string;
+    @Column({ nullable: true })
+    email: string;
     @Column({ default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
     @Column({ nullable: true })
