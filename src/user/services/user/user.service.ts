@@ -26,7 +26,6 @@ export class UserService {
 
     async createUser(userDto: UserDto): Promise<User> {
         try {
-            const existingUser = await this.userRepository.findOne({ where: { username: userDto.username } });
             const newUser = this.userRepository.create({ ...userDto, created_at: new Date() });
             return this.userRepository.save(newUser);
         } catch (error) {
